@@ -9,6 +9,7 @@
   	<module>core</module>
   	<module>jee</module>
   	<module>swing</module>
+  	<module>playground</module>
   </modules>
   <dependencies>
   	<dependency>

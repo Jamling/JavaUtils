@@ -18,7 +18,9 @@ public class EncodeUtilsTest {
     
     @Test
     public void testEncodeXml() {
-        fail("Not yet implemented");
+        String src = "<font style='1'>font</font>";
+        String dst = EncodeUtils.encodeXml(src);
+        assertEquals(src, EncodeUtils.decodeXml(dst));
     }
     
     @Test

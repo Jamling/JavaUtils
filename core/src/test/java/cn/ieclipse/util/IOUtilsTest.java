@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -60,10 +61,12 @@ public class IOUtilsTest {
     }
     
     @Test
-    public void testRead2Byte() {
+    public void testRead2Byte() throws Exception{
         InputStream in = ClassLoader.getSystemResourceAsStream("test.txt");
         byte[] actual = IOUtils.read2Byte(in);
-        assertArrayEquals(abc.getBytes(), actual);
+        System.out.println(Arrays.toString(actual));
+        System.out.println(Arrays.toString(abc.getBytes("utf-8")));
+        assertArrayEquals(abc.getBytes("utf-8"), actual);
     }
     
 }
