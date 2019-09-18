@@ -1,8 +1,7 @@
 /*
- * (C) Copyright 2011-2013 li.jamling@gmail.com. 
+ * (C) Copyright 2011-2013 li.jamling@gmail.com.
  *
- * This software is the property of li.jamling@gmail.com.
- * You have to accept the terms in the license file before use.
+ * This software is the property of li.jamling@gmail.com. You have to accept the terms in the license file before use.
  *
  */
 package cn.ieclipse.util;
@@ -26,14 +25,14 @@ import org.slf4j.LoggerFactory;
 public final class IOUtils {
     private static final Logger logger = LoggerFactory.getLogger(IOUtils.class);
     private static final int BUFFER_SIZE = 8192;
-    
+
     /**
      * private constructor prevent for creating instance
      */
     private IOUtils() {
-    
+
     }
-    
+
     public static void close(Closeable closeable) {
         if (closeable != null) {
             try {
@@ -52,7 +51,7 @@ public final class IOUtils {
             }
         }
     }
-    
+
     /**
      * Close {@link InputStream} safely.
      * 
@@ -73,7 +72,7 @@ public final class IOUtils {
             }
         }
     }
-    
+
     /**
      * Close {@link OutputStream} safely.
      * 
@@ -94,7 +93,7 @@ public final class IOUtils {
             }
         }
     }
-    
+
     /**
      * Copy data from {@link InputStream} to {@link OutputStream}.
      * 
@@ -108,8 +107,7 @@ public final class IOUtils {
      * @throws IOException
      *             if an I/O Exception occur
      */
-    public static long copyStream(InputStream is, OutputStream os,
-            int bufferSize) throws IOException {
+    public static long copyStream(InputStream is, OutputStream os, int bufferSize) throws IOException {
         int total = 0;
         int read = 0;
         if (bufferSize <= 0) {
@@ -122,12 +120,11 @@ public final class IOUtils {
         }
         return total;
     }
-    
-    public static long copyStream(InputStream is, OutputStream os)
-            throws IOException {
+
+    public static long copyStream(InputStream is, OutputStream os) throws IOException {
         return IOUtils.copyStream(is, os, BUFFER_SIZE);
     }
-    
+
     /**
      * Read data from socket input stream to a new InputStream
      * 
@@ -139,8 +136,7 @@ public final class IOUtils {
      * @throws IOException
      *             if an I/O Exception occur
      */
-    public static ByteArrayInputStream readSocketStream(InputStream is)
-            throws IOException {
+    public static ByteArrayInputStream readSocketStream(InputStream is) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         copyStream(is, bos);
         byte[] data = bos.toByteArray();
@@ -149,16 +145,15 @@ public final class IOUtils {
         closeStream(bos);
         return bis;
     }
-    
+
     /**
-     * Read stream to byte array. Note this method not suitable for read socket
-     * input stream
+     * Read stream to byte array. Note this method not suitable for read socket input stream
      * 
      * @param is
      *            InputStream
      * @return content of stream
      */
-    @SuppressWarnings({ "all" })
+    @SuppressWarnings({"all"})
     public static byte[] read2Byte(InputStream is) {
         int read = -1;
         int total = -1;

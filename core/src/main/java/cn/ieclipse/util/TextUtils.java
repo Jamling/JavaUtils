@@ -1,17 +1,14 @@
 /*
  * Copyright (C) 2006 The Android Open Source Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package cn.ieclipse.util;
 
@@ -24,29 +21,27 @@ import java.util.regex.Pattern;
 class TextUtils {
     private TextUtils() {
         /* cannot be instantiated */ }
-        
-    public static void getChars(CharSequence s, int start, int end, char[] dest,
-            int destoff) {
+
+    public static void getChars(CharSequence s, int start, int end, char[] dest, int destoff) {
         Class<? extends CharSequence> c = s.getClass();
-        
+
         if (c == String.class)
-            ((String) s).getChars(start, end, dest, destoff);
+            ((String)s).getChars(start, end, dest, destoff);
         else if (c == StringBuffer.class)
-            ((StringBuffer) s).getChars(start, end, dest, destoff);
+            ((StringBuffer)s).getChars(start, end, dest, destoff);
         else if (c == StringBuilder.class)
-            ((StringBuilder) s).getChars(start, end, dest, destoff);
+            ((StringBuilder)s).getChars(start, end, dest, destoff);
         else {
             for (int i = start; i < end; i++)
                 dest[destoff++] = s.charAt(i);
         }
     }
-    
+
     /**
      * Returns a string containing the tokens joined by delimiters.
      * 
      * @param tokens
-     *            an array objects to be joined. Strings will be formed from the
-     *            objects by calling object.toString().
+     *            an array objects to be joined. Strings will be formed from the objects by calling object.toString().
      */
     public static String join(CharSequence delimiter, Object[] tokens) {
         StringBuilder sb = new StringBuilder();
@@ -54,21 +49,19 @@ class TextUtils {
         for (Object token : tokens) {
             if (firstTime) {
                 firstTime = false;
-            }
-            else {
+            } else {
                 sb.append(delimiter);
             }
             sb.append(token);
         }
         return sb.toString();
     }
-    
+
     /**
      * Returns a string containing the tokens joined by delimiters.
      * 
      * @param tokens
-     *            an array objects to be joined. Strings will be formed from the
-     *            objects by calling object.toString().
+     *            an array objects to be joined. Strings will be formed from the objects by calling object.toString().
      */
     public static String join(CharSequence delimiter, Iterable tokens) {
         StringBuilder sb = new StringBuilder();
@@ -82,57 +75,52 @@ class TextUtils {
         }
         return sb.toString();
     }
-    
+
     /**
-     * String.split() returns [''] when the string to be split is empty. This
-     * returns []. This does not remove any empty strings from the result. For
-     * example split("a,", "," ) returns {"a", ""}.
+     * String.split() returns [''] when the string to be split is empty. This returns []. This does not remove any empty
+     * strings from the result. For example split("a,", "," ) returns {"a", ""}.
      *
      * @param text
      *            the string to split
      * @param expression
      *            the regular expression to match
      * @return an array of strings. The array will be empty if text is empty
-     *         
+     * 
      * @throws NullPointerException
      *             if expression or text is null
      */
     public static String[] split(String text, String expression) {
         if (text.length() == 0) {
             return EMPTY_STRING_ARRAY;
-        }
-        else {
+        } else {
             return text.split(expression, -1);
         }
     }
-    
+
     /**
-     * Splits a string on a pattern. String.split() returns [''] when the string
-     * to be split is empty. This returns []. This does not remove any empty
-     * strings from the result.
+     * Splits a string on a pattern. String.split() returns [''] when the string to be split is empty. This returns [].
+     * This does not remove any empty strings from the result.
      * 
      * @param text
      *            the string to split
      * @param pattern
      *            the regular expression to match
      * @return an array of strings. The array will be empty if text is empty
-     *         
+     * 
      * @throws NullPointerException
      *             if expression or text is null
      */
     public static String[] split(String text, Pattern pattern) {
         if (text.length() == 0) {
             return EMPTY_STRING_ARRAY;
-        }
-        else {
+        } else {
             return pattern.split(text, -1);
         }
     }
-    
+
     /**
-     * An interface for splitting strings according to rules that are opaque to
-     * the user of this interface. This also has less overhead than split, which
-     * uses regular expressions and allocates an array to hold the results.
+     * An interface for splitting strings according to rules that are opaque to the user of this interface. This also
+     * has less overhead than split, which uses regular expressions and allocates an array to hold the results.
      *
      * <p>
      * The most efficient way to use this class is:
@@ -151,23 +139,21 @@ class TextUtils {
     public interface StringSplitter extends Iterable<String> {
         public void setString(String string);
     }
-    
+
     /**
      * A simple string splitter.
      *
      * <p>
-     * If the final character in the string to split is the delimiter then no
-     * empty string will be returned for the empty string after that delimeter.
-     * That is, splitting <tt>"a,b,"</tt> on comma will return <tt>"a", "b"</tt>
-     * , not <tt>"a", "b", ""</tt>.
+     * If the final character in the string to split is the delimiter then no empty string will be returned for the
+     * empty string after that delimeter. That is, splitting <tt>"a,b,"</tt> on comma will return <tt>"a", "b"</tt> ,
+     * not <tt>"a", "b", ""</tt>.
      */
-    public static class SimpleStringSplitter
-            implements StringSplitter, Iterator<String> {
+    public static class SimpleStringSplitter implements StringSplitter, Iterator<String> {
         private String mString;
         private char mDelimiter;
         private int mPosition;
         private int mLength;
-        
+
         /**
          * Initializes the splitter. setString may be called later.
          * 
@@ -177,7 +163,7 @@ class TextUtils {
         public SimpleStringSplitter(char delimiter) {
             mDelimiter = delimiter;
         }
-        
+
         /**
          * Sets the string to split
          * 
@@ -189,15 +175,15 @@ class TextUtils {
             mPosition = 0;
             mLength = mString.length();
         }
-        
+
         public Iterator<String> iterator() {
             return this;
         }
-        
+
         public boolean hasNext() {
             return mPosition < mLength;
         }
-        
+
         public String next() {
             int end = mString.indexOf(mDelimiter, mPosition);
             if (end == -1) {
@@ -207,12 +193,12 @@ class TextUtils {
             mPosition = end + 1; // Skip the delimiter.
             return nextString;
         }
-        
+
         public void remove() {
             throw new UnsupportedOperationException();
         }
     }
-    
+
     /**
      * Returns true if the string is null or 0-length.
      * 
@@ -226,33 +212,32 @@ class TextUtils {
         else
             return false;
     }
-    
+
     /**
-     * Returns the length that the specified CharSequence would have if spaces
-     * and ASCII control characters were trimmed from the start and end, as by
-     * {@link String#trim}.
+     * Returns the length that the specified CharSequence would have if spaces and ASCII control characters were trimmed
+     * from the start and end, as by {@link String#trim}.
      */
     public static int getTrimmedLength(CharSequence s) {
         int len = s.length();
-        
+
         int start = 0;
         while (start < len && s.charAt(start) <= ' ') {
             start++;
         }
-        
+
         int end = len;
         while (end > start && s.charAt(end - 1) <= ' ') {
             end--;
         }
-        
+
         return end - start;
     }
-    
+
     /**
      * Returns true if a and b are equal, including if they are both null.
      * <p>
-     * <i>Note: In platform versions 1.1 and earlier, this method only worked
-     * well if both the arguments were instances of String.</i>
+     * <i>Note: In platform versions 1.1 and earlier, this method only worked well if both the arguments were instances
+     * of String.</i>
      * </p>
      * 
      * @param a
@@ -268,8 +253,7 @@ class TextUtils {
         if (a != null && b != null && (length = a.length()) == b.length()) {
             if (a instanceof String && b instanceof String) {
                 return a.equals(b);
-            }
-            else {
+            } else {
                 for (int i = 0; i < length; i++) {
                     if (a.charAt(i) != b.charAt(i))
                         return false;
@@ -279,7 +263,7 @@ class TextUtils {
         }
         return false;
     }
-    
+
     /**
      * Html-encode the string.
      * 
@@ -320,7 +304,7 @@ class TextUtils {
         }
         return sb.toString();
     }
-    
+
     /**
      * Returns whether the given CharSequence contains any printable characters.
      */
@@ -329,17 +313,15 @@ class TextUtils {
         for (int cp, i = 0; i < len; i += Character.charCount(cp)) {
             cp = Character.codePointAt(str, i);
             int gc = Character.getType(cp);
-            if (gc != Character.CONTROL && gc != Character.FORMAT
-                    && gc != Character.SURROGATE && gc != Character.UNASSIGNED
-                    && gc != Character.LINE_SEPARATOR
-                    && gc != Character.PARAGRAPH_SEPARATOR
-                    && gc != Character.SPACE_SEPARATOR) {
+            if (gc != Character.CONTROL && gc != Character.FORMAT && gc != Character.SURROGATE
+                && gc != Character.UNASSIGNED && gc != Character.LINE_SEPARATOR && gc != Character.PARAGRAPH_SEPARATOR
+                && gc != Character.SPACE_SEPARATOR) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
      * Returns whether this character is a printable character.
      *
@@ -350,13 +332,11 @@ class TextUtils {
     @Deprecated
     public static boolean isGraphic(char c) {
         int gc = Character.getType(c);
-        return gc != Character.CONTROL && gc != Character.FORMAT
-                && gc != Character.SURROGATE && gc != Character.UNASSIGNED
-                && gc != Character.LINE_SEPARATOR
-                && gc != Character.PARAGRAPH_SEPARATOR
-                && gc != Character.SPACE_SEPARATOR;
+        return gc != Character.CONTROL && gc != Character.FORMAT && gc != Character.SURROGATE
+            && gc != Character.UNASSIGNED && gc != Character.LINE_SEPARATOR && gc != Character.PARAGRAPH_SEPARATOR
+            && gc != Character.SPACE_SEPARATOR;
     }
-    
+
     /**
      * Returns whether the given CharSequence contains only digits.
      */
@@ -370,7 +350,7 @@ class TextUtils {
         }
         return true;
     }
-    
+
     /**
      * @hide
      */
@@ -379,7 +359,7 @@ class TextUtils {
         final int asciiLast = 0x7E; // included
         return (asciiFirst <= c && c <= asciiLast) || c == '\r' || c == '\n';
     }
-    
+
     /**
      * @hide
      */
@@ -392,15 +372,13 @@ class TextUtils {
         }
         return true;
     }
-    
+
     /**
-     * Does a comma-delimited list 'delimitedString' contain a certain item?
-     * (without allocating memory)
+     * Does a comma-delimited list 'delimitedString' contain a certain item? (without allocating memory)
      *
      * @hide
      */
-    public static boolean delimitedStringContains(String delimitedString,
-            char delimiter, String item) {
+    public static boolean delimitedStringContains(String delimitedString, char delimiter, String item) {
         if (isEmpty(delimitedString) || isEmpty(item)) {
             return false;
         }
@@ -421,7 +399,7 @@ class TextUtils {
         }
         return false;
     }
-    
+
     /**
      * Pack 2 int values into a long, useful as a return value for a range
      * 
@@ -430,32 +408,30 @@ class TextUtils {
      * @hide
      */
     public static long packRangeInLong(int start, int end) {
-        return (((long) start) << 32) | end;
+        return (((long)start) << 32) | end;
     }
-    
+
     /**
-     * Get the start value from a range packed in a long by
-     * {@link #packRangeInLong(int, int)}
+     * Get the start value from a range packed in a long by {@link #packRangeInLong(int, int)}
      * 
      * @see #unpackRangeEndFromLong(long)
      * @see #packRangeInLong(int, int)
      * @hide
      */
     public static int unpackRangeStartFromLong(long range) {
-        return (int) (range >>> 32);
+        return (int)(range >>> 32);
     }
-    
+
     /**
-     * Get the end value from a range packed in a long by
-     * {@link #packRangeInLong(int, int)}
+     * Get the end value from a range packed in a long by {@link #packRangeInLong(int, int)}
      * 
      * @see #unpackRangeStartFromLong(long)
      * @see #packRangeInLong(int, int)
      * @hide
      */
     public static int unpackRangeEndFromLong(long range) {
-        return (int) (range & 0x00000000FFFFFFFFL);
+        return (int)(range & 0x00000000FFFFFFFFL);
     }
-    
+
     private static String[] EMPTY_STRING_ARRAY = new String[] {};
 }

@@ -1,17 +1,14 @@
 /*
  * Copyright 2014-2017 ieclipse.cn.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package cn.ieclipse.common;
 
@@ -35,14 +32,14 @@ import cn.ieclipse.util.IOUtils;
  * 
  * @author Jamling
  * @date 2017年8月25日
- *       
+ * 
  */
 public class FileStorage {
     private static final String cr = System.getProperty("line.separator");
     private boolean persistent;
     private String path;
     private LimitArrayList<String> queue;
-    
+
     public FileStorage(int size, String path) {
         queue = new LimitArrayList<>(size);
         this.path = path;
@@ -50,8 +47,7 @@ public class FileStorage {
         try {
             File f = new File(path);
             if (f.exists()) {
-                br = new BufferedReader(new InputStreamReader(
-                        new FileInputStream(f), Charset.forName("utf-8")));
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(f), Charset.forName("utf-8")));
                 Iterator<String> itr = br.lines().iterator();
                 while (itr.hasNext()) {
                     queue.add(itr.next());
@@ -65,37 +61,36 @@ public class FileStorage {
             }
         }
     }
-    
+
     public synchronized String read(int line) throws IOException {
         return queue.get(line);
     }
-    
+
     public synchronized boolean append(String content) {
         return queue.add(content);
     }
-    
+
     public synchronized int getLines() {
         return queue.size();
     }
-    
+
     public synchronized List<String> getLast(int count) {
         int size = getLines();
         if (size <= count) {
             return queue;
-        }
-        else {
+        } else {
             return queue.subList(size - count, size - 1);
         }
     }
-    
+
     public void setPersistent(boolean persistent) {
         this.persistent = persistent;
     }
-    
+
     public boolean isPersistent() {
         return persistent;
     }
-    
+
     public synchronized boolean flush() {
         BufferedWriter bw;
         try {
@@ -106,10 +101,9 @@ public class FileStorage {
             if (!f.exists()) {
                 FileUtils.mkFile(f, true);
             }
-            
-            bw = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(f), Charset.forName("utf-8")));
-                    
+
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName("utf-8")));
+
             for (int i = 0; i < queue.size(); i++) {
                 if (i > 0) {
                     bw.newLine();
@@ -125,7 +119,7 @@ public class FileStorage {
         }
         return false;
     }
-    
+
     public synchronized void release() {
         if (queue != null) {
             queue.clear();
@@ -135,7 +129,7 @@ public class FileStorage {
             f.delete();
         }
     }
-    
+
     public static void main(String[] args) throws Exception {
         FileStorage fs = new FileStorage(3, "test.txt");
         fs.append("中文abc哈哈");
