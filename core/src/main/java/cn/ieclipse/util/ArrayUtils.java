@@ -1,17 +1,14 @@
 /*
  * Copyright 2014-2016 QuickAF
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package cn.ieclipse.util;
 
@@ -27,8 +24,10 @@ public class ArrayUtils {
     /**
      * (1.08)、在数组objects中搜索元素element
      *
-     * @param objects 待操作的数组
-     * @param element 待匹配的元素
+     * @param objects
+     *            待操作的数组
+     * @param element
+     *            待匹配的元素
      * @return 索引，如不存在，-1
      */
     public static int search(Object[] objects, Object element) {
@@ -36,8 +35,7 @@ public class ArrayUtils {
         for (int w = 0; w < objects.length; w++) {
             if (!element.equals(objects[w])) {
                 continue;
-            }
-            else {
+            } else {
                 e = w;
                 break;
             }
@@ -46,14 +44,15 @@ public class ArrayUtils {
     }
     /* **************1、增删移动相关over********* */
 
-
-	/* ****************2、Int数组排序相关start**** */
+    /* ****************2、Int数组排序相关start**** */
 
     /**
      * (2.01)、使用选择排序法，对数组intArray进行排序
      *
-     * @param intArray  待排序的数组
-     * @param ascending 升序
+     * @param intArray
+     *            待排序的数组
+     * @param ascending
+     *            升序
      */
     public static void sortingByChoose(int[] intArray, boolean ascending) {
         for (int cankaozhi = 0; cankaozhi < intArray.length - 1; cankaozhi++) {
@@ -63,8 +62,7 @@ public class ArrayUtils {
                 boolean typee = true;
                 if (ascending) {
                     typee = zhongjian > intArray[zujian];
-                }
-                else {
+                } else {
                     typee = zhongjian < intArray[zujian];
                 }
                 if (typee) {
@@ -84,8 +82,10 @@ public class ArrayUtils {
     /**
      * (2.02)、使用插入排序法，对数组intArray进行排序
      *
-     * @param intArray  待排序的数组
-     * @param ascending 升序
+     * @param intArray
+     *            待排序的数组
+     * @param ascending
+     *            升序
      */
     public static void sortingByInsert(int[] intArray, boolean ascending) {
         for (int i = 1; i < intArray.length; i++) {
@@ -95,8 +95,7 @@ public class ArrayUtils {
                 boolean typee = true;
                 if (ascending) {
                     typee = t < intArray[j];
-                }
-                else {
+                } else {
                     typee = t > intArray[j];
                 }
                 if (!typee) {
@@ -115,8 +114,10 @@ public class ArrayUtils {
     /**
      * (2.03)、使用冒泡排序法，对数组intArray进行排序
      *
-     * @param intArray  待排序的数组
-     * @param ascending 升序
+     * @param intArray
+     *            待排序的数组
+     * @param ascending
+     *            升序
      */
     public static void sortingByBubbling(int[] intArray, boolean ascending) {
         for (int e = 0; e < intArray.length - 1; e++) {
@@ -124,8 +125,7 @@ public class ArrayUtils {
                 boolean typee = true;
                 if (ascending) {
                     typee = intArray[r] > intArray[r + 1];
-                }
-                else {
+                } else {
                     typee = intArray[r] < intArray[r + 1];
                 }
                 if (typee) {
@@ -140,15 +140,17 @@ public class ArrayUtils {
     /**
      * (2.04)、使用递归快排法，对数组intArray进行排序
      *
-     * @param intArray  待排序的数组
-     * @param ascending 排序的方式，用本类中的静态字段指定
+     * @param intArray
+     *            待排序的数组
+     * @param ascending
+     *            排序的方式，用本类中的静态字段指定
      */
     public static void sortingByFastRecursion(int[] intArray, int start, int end, boolean ascending) {
         int tmp = intArray[start];
         int i = start;
 
         if (ascending) {
-            for (int j = end; i < j; ) {
+            for (int j = end; i < j;) {
                 while (intArray[j] > tmp && i < j) {
                     j--;
                 }
@@ -163,9 +165,8 @@ public class ArrayUtils {
                     j--;
                 }
             }
-        }
-        else {
-            for (int j = end; i < j; ) {
+        } else {
+            for (int j = end; i < j;) {
                 while (intArray[j] < tmp && i < j) {
                     j--;
                 }
@@ -194,8 +195,10 @@ public class ArrayUtils {
     /**
      * (2.05)、使用栈快排法，对数组intArray进行排序
      *
-     * @param intArray  待排序的数组
-     * @param ascending 升序
+     * @param intArray
+     *            待排序的数组
+     * @param ascending
+     *            升序
      */
     public static void sortingByFastStack(int[] intArray, boolean ascending) {
         Stack<Integer> sa = new Stack<Integer>();
@@ -223,8 +226,7 @@ public class ArrayUtils {
                         j--;
                     }
                 }
-            }
-            else {
+            } else {
                 while (i < j) {
                     while (intArray[j] < tmp && i < j) {
                         j--;
@@ -284,23 +286,27 @@ public class ArrayUtils {
     /**
      * 将给定的数组转换成字符串
      *
-     * @param integers     给定的数组
-     * @param startSymbols 开始符号
-     * @param separator    分隔符
-     * @param endSymbols   结束符号
+     * @param integers
+     *            给定的数组
+     * @param startSymbols
+     *            开始符号
+     * @param separator
+     *            分隔符
+     * @param endSymbols
+     *            结束符号
      * @return 例如开始符号为"{"，分隔符为", "，结束符号为"}"，那么结果为：{1, 2, 3}
      */
     public static String toString(int[] integers, String startSymbols, String separator, String endSymbols) {
         boolean addSeparator = false;
         StringBuffer sb = new StringBuffer();
-        //如果开始符号不为null且不空
+        // 如果开始符号不为null且不空
         if (!TextUtils.isEmpty(startSymbols)) {
             sb.append(startSymbols);
         }
 
-        //循环所有的对象
+        // 循环所有的对象
         for (int object : integers) {
-            //如果需要添加分隔符
+            // 如果需要添加分隔符
             if (addSeparator) {
                 sb.append(separator);
                 addSeparator = false;
@@ -309,7 +315,7 @@ public class ArrayUtils {
             addSeparator = true;
         }
 
-        //如果结束符号不为null且不空
+        // 如果结束符号不为null且不空
         if (!TextUtils.isEmpty(endSymbols)) {
             sb.append(endSymbols);
         }
@@ -319,8 +325,10 @@ public class ArrayUtils {
     /**
      * 将给定的数组转换成字符串
      *
-     * @param integers  给定的数组
-     * @param separator 分隔符
+     * @param integers
+     *            给定的数组
+     * @param separator
+     *            分隔符
      * @return 例如分隔符为", "那么结果为：1, 2, 3
      */
     public static String toString(int[] integers, String separator) {
@@ -330,7 +338,8 @@ public class ArrayUtils {
     /**
      * 将给定的数组转换成字符串，默认分隔符为", "
      *
-     * @param integers 给定的数组
+     * @param integers
+     *            给定的数组
      * @return 例如：1, 2, 3
      */
     public static String toString(int[] integers) {
@@ -340,23 +349,27 @@ public class ArrayUtils {
     /**
      * 将给定的数组转换成字符串
      *
-     * @param objects      给定的数组
-     * @param startSymbols 开始符号
-     * @param separator    分隔符
-     * @param endSymbols   结束符号
+     * @param objects
+     *            给定的数组
+     * @param startSymbols
+     *            开始符号
+     * @param separator
+     *            分隔符
+     * @param endSymbols
+     *            结束符号
      * @return 例如开始符号为"{"，分隔符为", "，结束符号为"}"，那么结果为：{1, 2, 3}
      */
     public static String toString(Object[] objects, String startSymbols, String separator, String endSymbols) {
         boolean addSeparator = false;
         StringBuffer sb = new StringBuffer();
-        //如果开始符号不为null且不空
+        // 如果开始符号不为null且不空
         if (!TextUtils.isEmpty(startSymbols)) {
             sb.append(startSymbols);
         }
 
-        //循环所有的对象
+        // 循环所有的对象
         for (Object object : objects) {
-            //如果需要添加分隔符
+            // 如果需要添加分隔符
             if (addSeparator) {
                 sb.append(separator);
                 addSeparator = false;
@@ -365,7 +378,7 @@ public class ArrayUtils {
             addSeparator = true;
         }
 
-        //如果结束符号不为null且不空
+        // 如果结束符号不为null且不空
         if (!TextUtils.isEmpty(endSymbols)) {
             sb.append(endSymbols);
         }
@@ -375,8 +388,10 @@ public class ArrayUtils {
     /**
      * 将给定的数组转换成字符串
      *
-     * @param objects   给定的数组
-     * @param separator 分隔符
+     * @param objects
+     *            给定的数组
+     * @param separator
+     *            分隔符
      * @return 例如分隔符为", "那么结果为：1, 2, 3
      */
     public static String toString(Object[] objects, String separator) {
@@ -386,7 +401,8 @@ public class ArrayUtils {
     /**
      * 将给定的数组转换成字符串，默认分隔符为", "
      *
-     * @param objects 给定的数组
+     * @param objects
+     *            给定的数组
      * @return 例如：1, 2, 3
      */
     public static String toString(Object[] objects) {

@@ -10,10 +10,14 @@ import java.io.ObjectOutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Jamling
  */
 public final class FileUtils {
+    private static Logger mLogger = LoggerFactory.getLogger(FileUtils.class);
 
     private FileUtils() {
 
@@ -249,7 +253,9 @@ public final class FileUtils {
                         IOUtils.closeStream(e);
                         return true;
                     }
-                } catch (Exception var5) {
+                } catch (Exception e) {
+                    mLogger.warn(
+                        "an error occurred when write object to " + f.getAbsolutePath() + " msg:" + e.toString(), e);
                     return false;
                 }
             }
@@ -266,7 +272,8 @@ public final class FileUtils {
             ObjectInputStream e = new ObjectInputStream(new FileInputStream(f));
             ret = e.readObject();
             IOUtils.closeStream(e);
-        } catch (Exception var5) {
+        } catch (Exception e) {
+            mLogger.warn("an error occurred when read object from " + f.getAbsolutePath() + " msg:" + e.toString(), e);
         }
 
         return ret;
@@ -281,5 +288,13 @@ public final class FileUtils {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public static String toUrl(String path) {
+        if (path == null) {
+            return null;
+        }
+        String prefix = path.startsWith("/") ? "file://" : "file:///";
+        return prefix + path.replaceAll("\\\\", "/");
     }
 }
