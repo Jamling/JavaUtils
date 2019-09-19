@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 
 /**
  * @author Jamling
@@ -269,5 +270,16 @@ public final class FileUtils {
         }
 
         return ret;
+    }
+
+    public static String readString(File file, String encoding) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            byte[] bytes = IOUtils.read2Byte(fis);
+            return new String(bytes,
+                TextUtils.isEmpty(encoding) ? Charset.defaultCharset() : Charset.forName(encoding));
+        } catch (Exception e) {
+            return "";
+        }
     }
 }
