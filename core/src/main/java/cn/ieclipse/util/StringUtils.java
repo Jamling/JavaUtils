@@ -14,6 +14,7 @@ package cn.ieclipse.util;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * StringUtils
@@ -73,5 +74,44 @@ public class StringUtils {
         } catch (Exception e) {
             return dft;
         }
+    }
+    
+    public static String toUnicode(String str) {
+        StringBuilder sb = new StringBuilder();
+        char[] ch = str.toCharArray();
+        for (char c : ch) {
+            sb.append("\\u");
+            sb.append(getFixWidthString(Integer.toHexString(c), 4));
+        }
+        return sb.toString();
+    }
+    
+    public static String getFixWidthString(String str, int width, char fill) {
+        if (str.length() == width) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(width);
+        for (int i = 0; i < width - str.length(); i++) {
+            sb.append(fill);
+        }
+        sb.append(str);
+        return sb.toString();
+    }
+    
+    public static String getFixWidthString(String str, int width) {
+        return getFixWidthString(str, width, '0');
+    }
+    
+    public static String getMatchRest(String str, String sub, int offset) {
+        Objects.requireNonNull(str);
+        Objects.requireNonNull(sub);
+        int pos = str.indexOf(sub);
+        if (pos >= 0) {
+            int start = sub.length() + 1 + offset;
+            if (start < str.length()) {
+                return str.substring(start);
+            }
+        }
+        return "";
     }
 }

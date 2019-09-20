@@ -3,6 +3,8 @@ package cn.ieclipse.common;
 import java.nio.charset.Charset;
 import java.util.Random;
 
+import cn.ieclipse.util.StringUtils;
+
 /** @author Jamling */
 public class Radix {
     public static final int HEX_BIN_WIDTH = 4;
@@ -218,25 +220,7 @@ public class Radix {
     }
 
     private static String getFixWidthString(String str, int width) {
-        if (str.length() == width) {
-            return str;
-        }
-        StringBuilder sb = new StringBuilder(width);
-        for (int i = 0; i < width - str.length(); i++) {
-            sb.append('0');
-        }
-        sb.append(str);
-        return sb.toString();
-    }
-
-    public static String str2Unicode(String str) {
-        StringBuilder sb = new StringBuilder();
-        char[] ch = str.toCharArray();
-        for (char c : ch) {
-            sb.append("\\u");
-            sb.append(Integer.toHexString(c));
-        }
-        return sb.toString();
+        return StringUtils.getFixWidthString(str, width);
     }
 
     /**
@@ -342,15 +326,9 @@ public class Radix {
         return b;
     }
 
-    /** @param args */
-    public static void main(String[] args) {
-        int dec = new Random().nextInt();
-        System.out.println(dec + "\t" + bin2Int(Integer.toBinaryString(dec)));
-        System.out.println(dec + "\t" + hex2Int(Integer.toHexString(dec)));
-        System.out.println(hex2Bin("0F"));
-        System.out.println(str2Unicode("简体中文Abc"));
-        System.out.println(bin2Hex("11010011"));
-        System.out.println(byte2Hex("d3".getBytes()));
+    public static String fromPercent(float p, int radix) {
+        int v = (int)((radix * radix - 1) * p);
+        return Integer.toHexString(v / radix) + Integer.toHexString(v % radix);
     }
 
     public static final class ConvertException extends RuntimeException {

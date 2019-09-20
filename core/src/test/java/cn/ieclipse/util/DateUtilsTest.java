@@ -21,7 +21,7 @@ public class DateUtilsTest {
 
     @Test
     public void now1() throws Exception {
-        
+        System.out.println(String.format("|%1$2s|", "f"));
     }
 
     @Test

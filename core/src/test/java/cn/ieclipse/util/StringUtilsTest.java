@@ -48,21 +48,25 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testGetRequestBody() {
-        // map
-        Map<String, String> map = new TreeMap<>();
-        map.put("id", "id");
-        map.put("name", null);
-        String body = EncodeUtils.encodeRequestBody(map, null, false);
-        Assert.assertEquals("id=id&name=", body);
-        body = EncodeUtils.encodeRequestBody(map, null, true);
-        Assert.assertEquals("id=id", body);
-
-        MyInfo info = new MyInfo("1");
-        body = EncodeUtils.encodeRequestBody(info, null, false);
-        Assert.assertEquals("id=1&name=", body);
-        body = EncodeUtils.encodeRequestBody(info, null, true);
-        Assert.assertEquals("id=1", body);
+    public void testGetMatchRest() {
+        String s = StringUtils.getMatchRest("abc", "d", 0);
+        Assert.assertEquals("", s);
+        
+        s = StringUtils.getMatchRest("abc", "b", 0);
+        Assert.assertEquals("c", s);
+        
+        s = StringUtils.getMatchRest("abc=1", "abc", 0);
+        Assert.assertEquals("1", s);
+        
+        s = StringUtils.getMatchRest("abc=", "bc", 1);
+        Assert.assertEquals("", s);
+    }
+    
+    @Test
+    public void toUnicode() {
+        String s = StringUtils.toUnicode("简体中文Abc");
+        String s2 = StringUtils.toUnicode("\u7b80\u4f53\u4e2d\u6587\u0041\u0062\u0063");
+        Assert.assertEquals(s, s2);
     }
 
     private static class MyInfo {
