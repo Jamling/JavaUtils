@@ -38,8 +38,8 @@ public class StringUtilsTest {
 
         // with null
         String[] array2 = {"1", null, "3"};
-        Assert.assertEquals("1,,3", StringUtils.join(",", array2));
-        Assert.assertEquals("1,,3", StringUtils.join(",", Arrays.asList(array2)));
+        Assert.assertEquals("1,null,3", StringUtils.join(",", array2));
+        Assert.assertEquals("1,null,3", StringUtils.join(",", Arrays.asList(array2)));
 
         // object
         Object[] array3 = {"1", 5, new MyInfo("3"), true};

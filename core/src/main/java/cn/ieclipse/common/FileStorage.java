@@ -95,6 +95,9 @@ public class FileStorage {
         BufferedWriter bw;
         try {
             File f = new File(path);
+            if (f.getParentFile() == null) {
+                return false;
+            }
             if (!f.getParentFile().exists()) {
                 f.getParentFile().mkdirs();
             }
