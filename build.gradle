@@ -19,8 +19,8 @@ subprojects {
     }
 
     dependencies {
-        compile 'org.slf4j:slf4j-api:1.7.21'
-        compile 'junit:junit:4.12'
+        implementation 'org.slf4j:slf4j-api:1.7.21'
+        testImplementation 'junit:junit:4.12'
     }
 
     sourceCompatibility = '1.8'
