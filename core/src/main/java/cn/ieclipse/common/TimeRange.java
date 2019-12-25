@@ -99,6 +99,10 @@ public class TimeRange {
     public int[] getHourRange() {
         return new int[]{hourMin, hourMax, hourIdx};
     }
+    
+    public int[] getMinuteRange() {
+        return new int[]{minuteMin, minuteMax, minuteIdx};
+    }
 
     private void printRange() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
