@@ -132,12 +132,4 @@ public class FileStorage {
             f.delete();
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        FileStorage fs = new FileStorage(3, "test.txt");
-        fs.append("中文abc哈哈");
-        String line = fs.read(0);
-        System.out.println("lines:" + line);
-        fs.flush();
-    }
 }

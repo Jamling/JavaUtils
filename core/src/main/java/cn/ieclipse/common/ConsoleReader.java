@@ -6,12 +6,14 @@ import java.io.InputStreamReader;
 
 /**
  * @author Jamling
- * 
  */
 public class ConsoleReader {
 
     private ReaderListener listener;
-    private String exitCmd; // exit command
+    /**
+     * exit command
+     */
+    private String exitCmd;
 
     public ConsoleReader(String exitCmd, ReaderListener listener) {
         this.exitCmd = exitCmd;
@@ -33,27 +35,23 @@ public class ConsoleReader {
         reader.close();
     }
 
-    public static interface ReaderListener {
-        void read(String line);
+    public void listen() {
+        try {
+            read();
+        } catch (IOException e) {
+            // do nothing
+        }
     }
 
     /**
-     * @param args
+     * Listener
      */
-    public static void main(String[] args) {
-        ConsoleReader reader = new ConsoleReader("quit", new ReaderListener() {
-
-            @Override
-            public void read(String line) {
-                System.out.println("read : " + line);
-            }
-        });
-        try {
-            reader.read();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+    public interface ReaderListener {
+        /**
+         * notify the content of input
+         *
+         * @param line content of input
+         */
+        void read(String line);
     }
 }

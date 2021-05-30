@@ -1,4 +1,6 @@
 target/
+classes/
+out/
 .settings/
 build/
 .idea/

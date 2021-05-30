@@ -177,14 +177,4 @@ public class Pagination {
         System.out.println(String.format("page:%d/%d; offset:%d-%d limit %d", getPage() + 1, getPageNum(), getOffset(),
             getEnd(), getLimit()));
     }
-
-    public static void main(String[] args) {
-        Pagination p = new Pagination(10, 40);
-        p.setPage(3);
-        p.dump();
-        p.setTotal(50);
-        p.dump();
-        p.setPageSize(50);
-        p.dump();
-    }
 }
