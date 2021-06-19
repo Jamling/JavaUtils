@@ -23,14 +23,20 @@ package playground.jdk8;
  *       
  */
 public interface EnhanceInterface {
-    public static final int SIZE = 10; // static final optional
+    /**
+     * static final optional
+     */
+    /*public static final */int SIZE = 10;
     
     void absFunc();
-    
+
+    /**
+     * JDK8 可以在接口中实现方法啦
+     */
     default void defaultFunc() {
         System.out.println("interface default function");
     }
-    
+
     static int staticFun(int a, int b) {
         int c = a + b;
         System.out.println("interface static function "
@@ -38,7 +44,7 @@ public interface EnhanceInterface {
         return c;
     }
     
-    public static class Impl implements EnhanceInterface {
+    /*public static */class Impl implements EnhanceInterface {
         
         @Override
         public void absFunc() {
@@ -47,7 +53,7 @@ public interface EnhanceInterface {
         
     }
     
-    public static void main(String[] args) {
+    /*public */static void main(String[] args) {
         Impl impl = new Impl();
         impl.absFunc();
         impl.defaultFunc();

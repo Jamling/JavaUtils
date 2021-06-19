@@ -1,4 +1,4 @@
-package playground.juc;
+package playground.jcu;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

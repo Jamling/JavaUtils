@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package playground.juc;
+package playground.jcu;
 
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
