@@ -7,8 +7,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConfItem {
+public @interface ConfigItem {
     String name() default "";
     String desc() default "";
     String type() default "String";
+    boolean empty() default true;
 }

@@ -1,7 +1,7 @@
 package cn.ieclipse.util.swing;
 
-import cn.ieclipse.util.swing.annotation.Conf;
-import cn.ieclipse.util.swing.annotation.ConfItem;
+import cn.ieclipse.util.swing.annotation.Config;
+import cn.ieclipse.util.swing.annotation.ConfigItem;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class PropConfigable {
+public class PropConfig {
     Properties properties = new Properties();
     File file;
     String content;
@@ -29,7 +29,7 @@ public class PropConfigable {
                             Class<?> paramClass = cw.field.getType();
                             cw.field.set(this, getFieldValue(properties.getProperty(name), paramClass));
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            throw new RuntimeException("parse " + name + " failed", e);
                         }
                     }
                 });
@@ -47,13 +47,20 @@ public class PropConfigable {
             properties.load(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
             getConfFields(getClass()).forEach(cw -> {
                 final String name = cw.confItem.name().isEmpty() ? cw.field.getName() : cw.confItem.name();
-                if (properties.containsKey(name)) {
+                boolean hasConf = properties.containsKey(name);
+                String confValue = properties.getProperty(name);
+                if (!cw.confItem.empty()) {
+                    if (!hasConf || confValue == null || confValue.isEmpty()) {
+                        throw new NullPointerException(name + " can't be empty");
+                    }
+                }
+                if (hasConf) {
                     try {
                         cw.field.setAccessible(true);
                         Class<?> paramClass = cw.field.getType();
-                        cw.field.set(this, getFieldValue(properties.getProperty(name), paramClass));
+                        cw.field.set(this, getFieldValue(confValue, paramClass));
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException("set " + name + " failed", e);
                     }
                 }
             });
@@ -68,7 +75,7 @@ public class PropConfigable {
             fos.flush();
             fos.close();
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
@@ -76,7 +83,7 @@ public class PropConfigable {
 
     public String generatePropertiesContent() {
         StringBuilder sb = new StringBuilder();
-        Conf conf = getClass().getAnnotation(Conf.class);
+        Config conf = getClass().getAnnotation(Config.class);
         if (conf != null) {
             sb.append('#');
             sb.append(conf.desc());
@@ -137,7 +144,7 @@ public class PropConfigable {
         List<ConfItemWrapper> result = new ArrayList<>();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            ConfItem confItem = field.getAnnotation(ConfItem.class);
+            ConfigItem confItem = field.getAnnotation(ConfigItem.class);
             if (confItem != null) {
                 result.add(new ConfItemWrapper(field, confItem));
             }
@@ -148,9 +155,9 @@ public class PropConfigable {
 
     static class ConfItemWrapper {
         public Field field;
-        public ConfItem confItem;
+        public ConfigItem confItem;
 
-        public ConfItemWrapper(Field field, ConfItem confItem) {
+        public ConfItemWrapper(Field field, ConfigItem confItem) {
             this.field = field;
             this.confItem = confItem;
         }

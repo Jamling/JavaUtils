@@ -1,6 +1,6 @@
 package cn.ieclipse.util.swing;
 
-import cn.ieclipse.util.swing.annotation.ConfItem;
+import cn.ieclipse.util.swing.annotation.ConfigItem;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -9,7 +9,7 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-public class PropConfEditorTest {
+public class PropConfigEditorTest {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -23,12 +23,12 @@ public class PropConfEditorTest {
                     frame.setTitle("PropConfEditorTest");
                     frame.setBounds(100, 100, 450, 300);
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    PropConfEditor.Options opt = new PropConfEditor.Options();
+                    PropConfigEditor.Options opt = new PropConfigEditor.Options();
                     TestConf conf = new TestConf();
                     conf.file = new File("test.properties");
                     conf.read();
                     opt.conf = conf;
-                    PropConfEditor editor = new PropConfEditor(opt);
+                    PropConfigEditor editor = new PropConfigEditor(opt);
                     frame.getContentPane().add(editor, BorderLayout.CENTER);
                     frame.setVisible(true);
                     
@@ -39,12 +39,12 @@ public class PropConfEditorTest {
         });
     }
 
-    static class TestConf extends PropConfigable{
-        @ConfItem(desc = "姓名")
+    static class TestConf extends PropConfig {
+        @ConfigItem(desc = "姓名")
         private String name;
-        @ConfItem(desc = "是否老年人")
+        @ConfigItem(desc = "是否老年人")
         private Boolean older;
-        @ConfItem(desc = "years")
+        @ConfigItem(desc = "years")
         private int age;
     }
 }

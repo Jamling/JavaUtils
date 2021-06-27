@@ -7,9 +7,8 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
-public class PropConfEditor extends JPanel {
+public class PropConfigEditor extends JPanel {
     /**
      *
      */
@@ -27,7 +26,7 @@ public class PropConfEditor extends JPanel {
     /**
      * Create the panel.
      */
-    public PropConfEditor(Options opt) {
+    public PropConfigEditor(Options opt) {
         if (opt == null) {
             opt = new Options();
         }
@@ -74,7 +73,7 @@ public class PropConfEditor extends JPanel {
             btnOk.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        PropConfigable conf = options.conf.getClass().newInstance();
+                        PropConfig conf = options.conf.getClass().newInstance();
                         textPane.setText(conf.generatePropertiesContent());
                         parse();
                     } catch (Exception ex) {
@@ -175,7 +174,7 @@ public class PropConfEditor extends JPanel {
     }
 
     public static class Options {
-        public PropConfigable conf;
+        public PropConfig conf;
         public boolean withSaveBtn = true;
         public boolean withRestoreBtn = true;
     }
