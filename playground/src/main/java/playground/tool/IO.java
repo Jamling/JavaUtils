@@ -11,7 +11,7 @@ public class IO implements java.io.Serializable {
     // 设计模式->包装者
     // 面向字节流
     // 面向字符流
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         InputStream inputStream;
         FileInputStream fis; // 文件
         ByteArrayInputStream bis; // byte[]
@@ -30,8 +30,8 @@ public class IO implements java.io.Serializable {
         //
         int b = is1.read();
 
-        Reader; FileReader; StringReader;
-        Writer;
+        //Reader; FileReader; StringReader;
+        //Writer;
 
         Reader in;
         BufferedReader br = new BufferedReader(new InputStreamReader(is1, StandardCharsets.UTF_8));

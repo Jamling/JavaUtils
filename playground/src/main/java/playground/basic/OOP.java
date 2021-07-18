@@ -1,4 +1,4 @@
-package playground.struct;
+package playground.basic;
 
 /**
  * 面向对象的三大特性
@@ -16,8 +16,9 @@ public class OOP {
         Car audi = new Audi();
         System.out.println(audi.color()); // 2
 
-        // 重写， 实现方法
+        // 重写， 重写父类方法或实现接口方法
 
+        // 重载， 根据方法参数类型及参数个数来决定具体调用哪个重载方法
 
         // 凡是父类调用的地方，都可以用子类进行代替
 
