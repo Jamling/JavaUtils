@@ -1,12 +1,10 @@
 package cn.ieclipse.util.swing;
 
-import junit.framework.TestCase;
-
 import javax.swing.*;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 public class SwingPrintStreamTest {
     public static void main(String[] args) {
@@ -35,7 +33,12 @@ public class SwingPrintStreamTest {
                     });
                     frame.setVisible(true);
                     SwingPrintStream out = new SwingPrintStream(System.out, jTextPane.getDocument());
-                    System.setErr(out);
+                    out.setPrintCallback(new SwingPrintStream.PrintCallback() {
+                        @Override
+                        public void onPrintBefore(Document document, String msg, int prefixLength) {
+                            System.err.println(msg + prefixLength);
+                        }
+                    });
                     System.setOut(out);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -64,7 +64,7 @@ public class ConsolePanelTest {
         public void run() {
             Logger logger = LoggerFactory.getLogger("progess thread");
             logger.info("start");
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {

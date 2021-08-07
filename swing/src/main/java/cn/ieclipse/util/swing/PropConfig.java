@@ -1,87 +1,105 @@
 package cn.ieclipse.util.swing;
 
+import cn.ieclipse.util.ReflectUtils;
 import cn.ieclipse.util.swing.annotation.Config;
 import cn.ieclipse.util.swing.annotation.ConfigItem;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 public class PropConfig {
-    Properties properties = new Properties();
-    File file;
-    String content;
-    boolean restrictMode;
+    private Builder builder;
 
-    public boolean read() {
-        try {
-            if (file != null && file.exists()) {
-                properties.clear();
-                properties.load(new FileInputStream(file));
-                getConfFields(getClass()).forEach(cw -> {
-                    final String name = cw.confItem.name().isEmpty() ? cw.field.getName() : cw.confItem.name();
-                    if (properties.containsKey(name)) {
-                        try {
-                            cw.field.setAccessible(true);
-                            Class<?> paramClass = cw.field.getType();
-                            cw.field.set(this, getFieldValue(properties.getProperty(name), paramClass));
-                        } catch (IllegalAccessException e) {
-                            throw new RuntimeException("parse " + name + " failed", e);
-                        }
-                    }
-                });
-            }
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public void setBuilder(Builder builder) {
+        this.builder = builder;
     }
 
-    public boolean saveContent(String content) {
-        try {
-            properties.clear();
-            properties.load(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
-            getConfFields(getClass()).forEach(cw -> {
-                final String name = cw.confItem.name().isEmpty() ? cw.field.getName() : cw.confItem.name();
-                boolean hasConf = properties.containsKey(name);
-                String confValue = properties.getProperty(name);
-                if (!cw.confItem.empty()) {
-                    if (!hasConf || confValue == null || confValue.isEmpty()) {
-                        throw new NullPointerException(name + " can't be empty");
-                    }
+    public Builder getBuilder() {
+        return builder;
+    }
+
+    public boolean read() throws IOException, ConfigParseException {
+        LineNumberReader reader =
+                new LineNumberReader(
+                        new InputStreamReader(
+                                new FileInputStream(builder.getFile()), StandardCharsets.UTF_8));
+        return parseConfig(reader);
+    }
+
+    private boolean parseConfig(LineNumberReader reader) throws ConfigParseException, IOException {
+        List<ConfItemWrapper> metaList = getConfFields(getClass());
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            line = line.trim();
+            if (!line.isEmpty()) {
+                if (line.startsWith("#")) {
+                    continue;
                 }
-                if (hasConf) {
+                int pos = line.indexOf("=");
+                if (pos > 0) {
+                    String name = line.substring(0, pos).trim();
+                    String value = line.substring(pos + 1).trim();
                     try {
-                        cw.field.setAccessible(true);
-                        Class<?> paramClass = cw.field.getType();
-                        cw.field.set(this, getFieldValue(confValue, paramClass));
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException("set " + name + " failed", e);
+                        setValue2Bean(metaList, name, value);
+                    } catch (ConfigParseException e) {
+                        e.lineNumber = reader.getLineNumber();
                     }
+                } else {
+                    String msg = String.format("wrong config item at line %d: %s", reader.getLineNumber(), line);
+                    throw new ConfigParseException(reader.getLineNumber(), msg);
                 }
-            });
-
-            FileOutputStream fos = new FileOutputStream(file);
-            if (this.restrictMode) {
-                this.content = generatePropertiesContent();
-                fos.write(this.content.getBytes(StandardCharsets.UTF_8));
-            } else {
-                fos.write(content.getBytes(StandardCharsets.UTF_8));
             }
-            fos.flush();
-            fos.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return false;
+        return true;
     }
 
-    public String generatePropertiesContent() {
+    private void setValue2Bean(List<ConfItemWrapper> metaList, String key, String value) throws ConfigParseException {
+        Object config = this;
+        for (ConfItemWrapper cw : metaList) {
+            final String name = cw.confItem.name().isEmpty() ? cw.field.getName() : cw.confItem.name();
+            if (name.equalsIgnoreCase(key)) {
+                Field field = ReflectUtils.getClassField(getClass(), name, true).get();
+                if (field != null) {
+                    try {
+                        field.setAccessible(true);
+                        Object obj = getFieldValue(field, value);
+                        field.set(config, obj);
+                    } catch (Exception e) {
+                        throw new ConfigParseException(String.format("can't set %s from %s", key, value));
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean saveContent(String content) throws IOException, ConfigParseException {
+        LineNumberReader reader =
+                new LineNumberReader(
+                        new InputStreamReader(
+                                new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))));
+        parseConfig(reader);
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(builder.file))) {
+            if (builder.restrictMode) {
+                builder.content = generateContent();
+                bufferedWriter.write(builder.content);
+            } else {
+                bufferedWriter.write(content);
+            }
+        }
+        return true;
+    }
+
+    public PropConfig getDefault() {
+        return getBuilder().create(getClass());
+    }
+
+    public String generateContent() {
         StringBuilder sb = new StringBuilder();
         Config conf = getClass().getAnnotation(Config.class);
         if (conf != null) {
@@ -117,8 +135,8 @@ public class PropConfig {
         return sb.toString();
     }
 
-    private static Object getFieldValue(String value,
-                                        Class<?> paramClass) {
+    private static Object getFieldValue(Field field, String value) {
+        Class<?> paramClass = field.getType();
         Object paramValue = null;
         if (paramClass == int.class || paramClass == Integer.class) {
             paramValue = Integer.parseInt(value);
@@ -136,6 +154,18 @@ public class PropConfig {
             paramValue = Boolean.parseBoolean(value);
         } else if (paramClass == String.class) {
             paramValue = value;
+        } else if (paramClass == String[].class) {
+            paramValue = value.split(",");
+        } else if (paramClass == Integer[].class) {
+            paramValue = Arrays.stream(value.split(",")).map(str -> Integer.parseInt(str)).toArray(Integer[]::new);
+        } else if (paramClass == List.class) {
+            Type type = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+            value = value.replaceFirst("^\\s*\\[\\s*", "").replaceFirst("\\s*]\\s*$", "");
+            String[] array = value.split(",");
+            List list = new ArrayList<>();
+            Arrays.stream(array).forEach(str -> {
+                list.add(type.getClass().cast(str));
+            });
         }
         return paramValue;
     }
@@ -153,13 +183,68 @@ public class PropConfig {
     }
 
 
-    static class ConfItemWrapper {
+    private static class ConfItemWrapper {
         public Field field;
         public ConfigItem confItem;
 
         public ConfItemWrapper(Field field, ConfigItem confItem) {
             this.field = field;
             this.confItem = confItem;
+        }
+    }
+
+    public static class Builder {
+        private File file;
+        private String content;
+        private boolean restrictMode;
+
+        public Builder setFile(File file) {
+            this.file = file;
+            return this;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public Builder setRestrictMode(boolean restrictMode) {
+            this.restrictMode = restrictMode;
+            return this;
+        }
+
+        public boolean getRestrictMode() {
+            return this.restrictMode;
+        }
+
+        public static Builder newInstance() {
+            return new Builder();
+        }
+
+        public <T extends PropConfig> T create(Class<T> clazz) {
+            try {
+                T t = clazz.newInstance();
+                t.setBuilder(this);
+                return t;
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException("can't construct clazz");
+            }
+        }
+    }
+
+    public static class ConfigParseException extends Exception {
+        private int lineNumber;
+
+        public ConfigParseException(String message) {
+            this(0, message);
+        }
+
+        public ConfigParseException(int lineNumber, String message) {
+            super(message);
+            this.lineNumber = lineNumber;
+        }
+
+        public int getLineNumber() {
+            return lineNumber;
         }
     }
 }

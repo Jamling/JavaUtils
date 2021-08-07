@@ -96,7 +96,7 @@ public class ConsolePanel extends JPanel {
 
         SwingInternalLogger.init("console", doc);
         if (options.redirectSystemOut) {
-            SwingInternalLogger.redirectSysout();
+            SwingInternalLogger.redirectSystemOut();
         }
         if (options.redirectSystemErr) {
             //System.setErr(swingLogger.getPrintStream());

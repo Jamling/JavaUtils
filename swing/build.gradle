@@ -3,3 +3,6 @@
  */
 
 description = 'swing'
+dependencies {
+    implementation project(':core')
+}

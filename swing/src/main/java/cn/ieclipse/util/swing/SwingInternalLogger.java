@@ -17,6 +17,8 @@ public class SwingInternalLogger {
     private Document document;
     private SwingPrintStream swingPrintStream;
     private static SwingInternalLogger instance = null;
+    private static boolean isRedirectSystemOut;
+    private static boolean isRedirectSystemErr;
 
     SimpleAttributeSet infoAttr = new SimpleAttributeSet();
     SimpleAttributeSet warnAttr = new SimpleAttributeSet();
@@ -73,8 +75,14 @@ public class SwingInternalLogger {
         targetStream.flush();
     }
 
-    public static void redirectSysout() {
+    public static void redirectSystemOut() {
         System.setOut(new RedirectSystemPrintStream(LOG_LEVEL_INFO));
+        isRedirectSystemOut = true;
+    }
+
+    public static void redirectSystemErr() {
+        System.setOut(new RedirectSystemPrintStream(LOG_LEVEL_ERROR));
+        isRedirectSystemErr = true;
     }
 
     private static class RedirectSystemPrintStream extends PrintStream {

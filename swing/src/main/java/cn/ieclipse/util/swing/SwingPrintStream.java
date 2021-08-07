@@ -45,7 +45,6 @@ public class SwingPrintStream extends PrintStream {
                 printCallback.onPrintBefore(document, msg, prefixLength);
             }
             int offset = document.getLength();
-            System.err.println("len:" + offset);
             document.insertString(offset, msg, attributeSet);
         } catch (BadLocationException e) {
             // TODO the e will be printed to this?

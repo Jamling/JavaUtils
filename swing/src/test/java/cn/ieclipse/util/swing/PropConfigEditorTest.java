@@ -14,7 +14,7 @@ public class PropConfigEditorTest {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-        
+
         }
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -24,14 +24,13 @@ public class PropConfigEditorTest {
                     frame.setBounds(100, 100, 450, 300);
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     PropConfigEditor.Options opt = new PropConfigEditor.Options();
-                    TestConf conf = new TestConf();
-                    conf.file = new File("test.properties");
+                    TestConf conf = PropConfig.Builder.newInstance().setFile(new File("test.conf")).create(TestConf.class);
                     conf.read();
                     opt.conf = conf;
                     PropConfigEditor editor = new PropConfigEditor(opt);
                     frame.getContentPane().add(editor, BorderLayout.CENTER);
                     frame.setVisible(true);
-                    
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -73,8 +73,8 @@ public class PropConfigEditor extends JPanel {
             btnOk.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        PropConfig conf = options.conf.getClass().newInstance();
-                        textPane.setText(conf.generatePropertiesContent());
+                        PropConfig conf = options.conf.getDefault();
+                        textPane.setText(conf.generateContent());
                         parse();
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -157,7 +157,7 @@ public class PropConfigEditor extends JPanel {
 
     public void load() {
         try {
-            String text = options.conf.generatePropertiesContent();
+            String text = options.conf.generateContent();
             textPane.setText(text);
             parse();
         } catch (Exception e) {
