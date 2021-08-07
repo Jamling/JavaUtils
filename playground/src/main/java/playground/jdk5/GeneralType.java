@@ -1,9 +1,32 @@
 package playground.jdk5;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GeneralType {
+
+    List<String> listField;
+    String stringField;
+    String[] arrayField;
+    public static void main(String[] args) throws Exception {
+        System.out.println("string Field==>");
+        printFieldInfo("stringField");
+        System.out.println("list Field==>");
+        printFieldInfo("listField");
+        System.out.println("array Field==>");
+        printFieldInfo("arrayField");
+
+        Class<?> clazz = java.lang.Integer[].class;
+        System.out.println(clazz.getComponentType());
+        System.out.println(Arrays.toString(Arrays.stream("1,2,3".split(",")).toArray()));
+    }
+
+    // 泛型边界
     public void bound() {
         List<? super B> list = new ArrayList<>();
         //list.add(new A());
@@ -37,7 +60,34 @@ public class GeneralType {
         A b  = adapter2.list.get(0);
     }
 
-    static class A{
+    private static void printFieldInfo(String name) throws Exception {
+        Field field = GeneralType.class.getDeclaredField(name);
+        Type type = field.getType();
+        System.out.println("type class: " + type.getClass());
+        System.out.println("type name: " +type.getTypeName());
+        Type superType = type.getClass().getGenericSuperclass();
+        System.out.println("super type: " + superType);
+
+        Type generalType = field.getGenericType();
+        System.out.println("general type class: " + generalType.getClass());
+        System.out.println("general type name: " +generalType.getTypeName());
+        if (generalType instanceof ParameterizedType) {
+            System.out.println("is ParameterizedType");
+            ParameterizedType parameterizedType = (ParameterizedType) generalType;
+            System.out.println("raw: " + parameterizedType.getRawType());
+            System.out.println("owner: " + parameterizedType.getOwnerType());
+            System.out.println("arguments: ");
+            Arrays.stream(parameterizedType.getActualTypeArguments()).forEach(System.out::println);
+        }
+        // wrong judge
+        else if (generalType instanceof GenericArrayType) {
+            System.out.println("is GenericArrayType");
+            GenericArrayType arrayType = GenericArrayType.class.cast(generalType);
+            System.out.println("array item type: " + arrayType.getGenericComponentType());
+        }
+    }
+
+    static class A {
 
     }
     static class B extends A {
@@ -50,6 +100,4 @@ public class GeneralType {
     static class Adapter1<T> {
         protected List<T> list;
     }
-
-
 }

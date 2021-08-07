@@ -7,6 +7,7 @@ description = 'playground'
 
 dependencies {
     implementation project(':core')
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.apache.poi:poi:3.13'
     implementation 'org.apache.poi:poi-ooxml:3.13'
 }
