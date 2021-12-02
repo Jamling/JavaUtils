@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,14 @@ public class ReflectUtilsTest {
     @Before
     public void setUp() throws Exception {
     }
+
+    @Test
+    public void testCast() {
+        System.out.println(int.class);
+        System.out.println(String.class);
+        Optional<Integer> val = ReflectUtils.cast(Integer.class, 1);
+        assertEquals(val, Optional.of(1));
+    }
     
     @Test
     public void testGetClassFieldClassOfQBooleanFieldFilter() {
@@ -24,23 +33,25 @@ public class ReflectUtilsTest {
         for (Field f : fs) {
             if (f.getName().equals("pri")) {
                 assertEquals(B.class, f.getDeclaringClass());
-                assertEquals(11, ReflectUtils.get(f, b));
+                Object val = ReflectUtils.get(f, b);
+                assertEquals(11, val);
             }
             else if (f.getName().equals("pro")) {
                 assertEquals(B.class, f.getDeclaringClass());
-                assertEquals(22, ReflectUtils.get(f, b));
+                Object val = ReflectUtils.get(f, b);
+                assertEquals(22, val);
             }
             else if (f.getName().equals("pub")) {
                 assertEquals(B.class, f.getDeclaringClass());
-                assertEquals(44, ReflectUtils.get(f, b));
+                Object val = ReflectUtils.get(f, b);
+                assertEquals(44, val);
             }
             else if (f.getName().equals("dft")) {
                 assertEquals(A.class, f.getDeclaringClass());
-                assertEquals(33, ReflectUtils.get(f, b));
+                Object val = ReflectUtils.get(f, b);
+                assertEquals(33, val);
             }
-            FieldFilter filter = (field) -> {
-                return (field.getModifiers() == Modifier.PUBLIC);
-            };
+            FieldFilter filter = (field) -> (field.getModifiers() == Modifier.PUBLIC);
             fs = ReflectUtils.getClassField(B.class, filter);
             assertEquals(1, fs.size());
         }

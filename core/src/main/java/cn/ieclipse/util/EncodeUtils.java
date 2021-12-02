@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import cn.ieclipse.util.ReflectUtils.FieldFilter;
 
@@ -77,9 +78,7 @@ public final class EncodeUtils {
 
     public static Map<String, Object> encode(Object obj, boolean excludeNull) {
         Map<String, Object> map = new HashMap<>();
-        FieldFilter filter = (field) -> {
-            return (field.getModifiers() & Modifier.STATIC) == 0;
-        };
+        FieldFilter filter = (field) -> (field.getModifiers() & Modifier.STATIC) == 0;
         List<Field> field = ReflectUtils.getClassField(obj.getClass(), filter);
         for (int i = 0; i < field.size(); i++) {
             Field f = field.get(i);
@@ -143,7 +142,7 @@ public final class EncodeUtils {
     }
 
     /**
-     * @see #getRequestBody(Object, String, boolean)
+     * Get request body from map
      */
     public static String encodeRequestBody(Map map, String charset, boolean excludeNull) {
         StringBuilder sb = new StringBuilder();

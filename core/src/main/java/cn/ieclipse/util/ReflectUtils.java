@@ -1,28 +1,39 @@
 package cn.ieclipse.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class ReflectUtils {
+    private static final Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
     private ReflectUtils() {
-
     }
 
-    public static Class<?> forName(String className) {
+    public static Optional<Class> forName(String className) {
         try {
-            return Class.forName(className);
+            return Optional.of(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("{} not found", className);
         }
-        return null;
+        return Optional.empty();
     }
 
     public static List<Field> getClassField(Class<?> clazz) {
         return getClassField(clazz, true, null);
+    }
+
+    public static Optional<Field> getClassField(Class<?> clazz, String fieldName, boolean searchSupper) {
+        List<Field> fields = getClassField(clazz, searchSupper, f -> f.getName().equals(fieldName));
+        if (fields.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(fields.get(0));
     }
 
     public static List<Field> getClassField(Class<?> clazz, FieldFilter filter) {
@@ -30,7 +41,7 @@ public final class ReflectUtils {
     }
 
     public static List<Field> getClassField(Class<?> clazz, boolean searchSuper, FieldFilter filter) {
-        return getClassField(clazz, true, true, filter);
+        return getClassField(clazz, true, searchSuper, filter);
     }
 
     public static List<Field> getClassField(Class<?> clazz, boolean declared, boolean searchSuper, FieldFilter filter) {
@@ -55,7 +66,7 @@ public final class ReflectUtils {
                 }
             }
             if (searchSuper) {
-                getClassField(clazz.getSuperclass(), list, names, declared, searchSuper, filter);
+                getClassField(clazz.getSuperclass(), list, names, declared, true, filter);
             }
         }
     }
@@ -64,14 +75,10 @@ public final class ReflectUtils {
         field.setAccessible(true);
         try {
             return field.get(obj);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            logger.error("get field({}) failed", field.getName());
         }
-        return null;
+        return Optional.empty();
     }
 
     public interface FieldFilter {
@@ -91,7 +98,7 @@ public final class ReflectUtils {
     }
 
     public static List<Method> getClassMethod(Class<?> clazz, boolean searchSuper, MethodFilter filter) {
-        return getClassMethod(clazz, true, true, filter);
+        return getClassMethod(clazz, true, searchSuper, filter);
     }
 
     public static List<Method> getClassMethod(Class<?> clazz, boolean declared, boolean searchSuper,
@@ -117,7 +124,7 @@ public final class ReflectUtils {
                 }
             }
             if (searchSuper) {
-                getClassMethod(clazz.getSuperclass(), list, names, declared, searchSuper, filter);
+                getClassMethod(clazz.getSuperclass(), list, names, declared, true, filter);
             }
         }
     }
@@ -126,17 +133,19 @@ public final class ReflectUtils {
         m.setAccessible(true);
         try {
             return m.invoke(obj, args);
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            logger.error("method {} call failed", m.getName());
         }
         return null;
     }
 
+    public static <T> Optional<T> cast(Class<T> resultClass, Object result) {
+        if (resultClass == null || result == null) {
+            return Optional.empty();
+        }
+        if (resultClass.isAssignableFrom(result.getClass())) {
+            return Optional.of(resultClass.cast(result));
+        }
+        return Optional.empty();
+    }
 }
