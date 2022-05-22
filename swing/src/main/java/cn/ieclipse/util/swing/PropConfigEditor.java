@@ -37,9 +37,9 @@ public class PropConfigEditor extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         textPane = new JTextPane();
+        textPane.setContentType("text/plain; charset=utf-8");
         // scrollPane.setPreferredSize(new Dimension(-1, 400));
         scrollPane.setViewportView(textPane);
-
         doc = textPane.getStyledDocument();
         StyleConstants.setForeground(commentAttr, green);
         StyleConstants.setForeground(labelAttr, Color.RED);

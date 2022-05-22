@@ -77,14 +77,24 @@ public class PropConfig {
         }
     }
 
+    /**
+     * 将内容保存到配置文件，创建的文件使用utf-8编码
+     *
+     * @param content 配置文件内容
+     * @return 是否保存成功
+     * @throws IOException IO异常
+     * @throws ConfigParseException 配置文件解析异常
+     */
     public boolean saveContent(String content) throws IOException, ConfigParseException {
         LineNumberReader reader =
                 new LineNumberReader(
                         new InputStreamReader(
-                                new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))));
+                                new ByteArrayInputStream(content.getBytes())));
         parseConfig(reader);
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(builder.file))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new OutputStreamWriter(
+                        new FileOutputStream(builder.file), StandardCharsets.UTF_8))) {
             if (builder.restrictMode) {
                 builder.content = generateContent();
                 bufferedWriter.write(builder.content);

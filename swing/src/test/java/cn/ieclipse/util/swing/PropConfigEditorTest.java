@@ -40,7 +40,7 @@ public class PropConfigEditorTest {
 
     static class TestConf extends PropConfig {
         @ConfigItem(desc = "姓名")
-        private String name;
+        private String name = "简体中文ABC";
         @ConfigItem(desc = "是否老年人")
         private Boolean older;
         @ConfigItem(desc = "years")
